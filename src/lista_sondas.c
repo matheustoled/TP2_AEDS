@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "headers/Lista_Sondas.h"
+#include "headers/lista_sondas.h"
 
 void FLVaziaLS(Lista_Sondas *LS){
     LS->pPrimeiro = (CelulaLS*)malloc(sizeof(CelulaLS));

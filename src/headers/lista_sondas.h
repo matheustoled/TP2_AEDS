@@ -1,7 +1,7 @@
 #ifndef LISTA_SONDAS_H
 #define LISTA_SONDAS_H
 
-#include "SONDA.h"
+#include "sonda.h"
 
 typedef struct CelulaLS
 {
