@@ -18,7 +18,7 @@ typedef struct Compartimento
 void FListaRochaM(Compartimento *LRM, int pesoMAX);
 int LEhVaziaRochaM(Compartimento *LRM);
 double PesoAtual(Compartimento *LRM);
-int InsereRochaM(Compartimento *LRM, RochaMineral *RochaM, int pesoMAX);
+int InsereRochaM(Compartimento *LRM, RochaMineral *rocha_validas, int PesoMax);
 void ImprimeListaRochaM(Compartimento *LRM);
 
  

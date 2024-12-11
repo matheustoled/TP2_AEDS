@@ -30,17 +30,18 @@ double PesoAtual(Compartimento *LRM){
     return peso;
 }
 
-int InsereRochaM(Compartimento *LRM, RochaMineral *RochaM, int PesoMax){   
-    int peso = PesoAtual(LRM);
-    peso += (RochaM->peso);
-    if (peso>PesoMax)
-    {
-        return 0;
+int InsereRochaM(Compartimento *LRM, RochaMineral *rocha_validas, int PesoMax) {
+    double pesoAtual = PesoAtual(LRM); // Calcula o peso atual das rochas no compartimento
+    if (pesoAtual + rocha_validas->peso > PesoMax) {
+        return 0; // Não pode inserir porque o peso ultrapassa o limite
     }
+
+    // Se não ultrapassar o peso máximo, insere a rocha
     LRM->pUltimo->pProx = (CelulaC*) malloc(sizeof(CelulaC));
     LRM->pUltimo = LRM->pUltimo->pProx;
-    LRM->pUltimo->rocha = *RochaM;
+    LRM->pUltimo->rocha = *rocha_validas;
     LRM->pUltimo->pProx = NULL;
+
     return 1;
 }
 
@@ -50,7 +51,8 @@ void ImprimeListaRochaM(Compartimento *LRM){
     while (pAuxI != NULL)
     {
         printf("Peso: %.2f\n", pAuxI->rocha.peso);
-        printf("Valor: %d", pAuxI->rocha.valor);
+        printf("Valor: %d\n", pAuxI->rocha.valor);
+        printf("\n");
         pAuxI = pAuxI->pProx;
     }
 }
