@@ -27,6 +27,6 @@ void remover_rochas_usadas(CombinacaoValida *combinacoes_validas, int *qnt_combi
 void gerarTodasCombinacoes(RochaMineral array_elementos_combinacao[], int tam_total_array, CombinacaoValida *rochas_validas, int *qnt_combinacoes_validas);
 
 //funcao para ler arquivo
-int LerArquivo(const char *nome_arquivo, RochaMineral rochas[]);
+int LerArquivo(char *nome_arquivo, RochaMineral rochas[]);
 
 void distribuicao_rochas(CombinacaoValida *rochas_validas, int qnt_combinacoes_validas);
