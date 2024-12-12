@@ -21,7 +21,7 @@ void gerarCombinacoes(RochaMineral array_elementos_combinacao[],
                       CombinacaoValida *rochas_validas,
                       int *qnt_combinacoes_validas);
 
-void remover_rochas_usadas(CombinacaoValida *combinacoes_validas, int *qnt_combinacoes_validas, RochaMineral *rochas_usadas, int qnt_rochas_usadas);
+void remover_combinacoes_usadas(CombinacaoValida *combinacoes_validas, int *qnt_combinacoes_validas, RochaMineral *rochas_usadas, int qnt_rochas_usadas);
 
 //gerar todas as combinações de tamanhos diferentes
 void gerarTodasCombinacoes(RochaMineral array_elementos_combinacao[], int tam_total_array, CombinacaoValida *rochas_validas, int *qnt_combinacoes_validas);
