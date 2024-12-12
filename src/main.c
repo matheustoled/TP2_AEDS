@@ -15,7 +15,10 @@ long long combinacao(int n, int k) {
 }
 
 int main() {
-    srand( (unsigned)time(NULL) );
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock(); // Início da medição
     //vetor para armazenar as rochas
     RochaMineral rochas[100];
     int quantidade_rochas;
@@ -34,7 +37,7 @@ int main() {
     if (combinacoes_validas == NULL) {
         printf("Erro ao alocar memoria para combinacoes validas.\n");
     return 1;
-}
+    }
 
     if (quantidade_rochas == 0) {
         printf("Nenhuma rocha foi carregada.\n");
@@ -48,5 +51,10 @@ int main() {
 
     distribuicao_rochas(combinacoes_validas, qnt_combinacoes_validas);
     free(combinacoes_validas);
+
+    end = clock(); // Fim da medição
+
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; // Tempo em segundos
+    printf("Tempo de execucao: %.3f segundos\n", cpu_time_used);
     return 0;
 }
