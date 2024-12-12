@@ -30,7 +30,11 @@ int main() {
     }
 
     //vetor para armazenar as combinacoes validas
-    CombinacaoValida combinacoes_validas[quantidade_combinacoes];
+    CombinacaoValida *combinacoes_validas = malloc(quantidade_combinacoes * sizeof(CombinacaoValida));
+    if (combinacoes_validas == NULL) {
+        printf("Erro ao alocar memoria para combinacoes validas.\n");
+    return 1;
+}
 
     if (quantidade_rochas == 0) {
         printf("Nenhuma rocha foi carregada.\n");
@@ -43,5 +47,6 @@ int main() {
     printf("\n\n\n");
 
     distribuicao_rochas(combinacoes_validas, qnt_combinacoes_validas);
+    free(combinacoes_validas);
     return 0;
 }

@@ -90,7 +90,7 @@ int LerArquivo(char *nome_arquivo, RochaMineral rochas[]) {
     fscanf(arquivo, "%d", &quantidade); //le a quantidade de rochas
 
     for (int i = 0; i < quantidade; i++) {
-        fscanf(arquivo, "%f %d", &rochas[i].peso, &rochas[i].valor); //le peso e valor
+        preencher_rocha_mineral(arquivo, i, rochas);
     }
 
     fclose(arquivo);
