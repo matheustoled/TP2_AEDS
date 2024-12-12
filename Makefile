@@ -1,2 +1,2 @@
 compile: src/main.c src/central_controle.c src/lista_sondas.c src/compartimento.c src/sonda.c src/rocha_mineral.c
-	gcc src/main.c src/central_controle.c src/lista_sondas.c src/compartimento.c src/sonda.c src/rocha_mineral.c -o bin/programa &&./bin/programa
+	gcc src/main.c src/central_controle.c src/lista_sondas.c src/compartimento.c src/sonda.c src/rocha_mineral.c -o bin/programa

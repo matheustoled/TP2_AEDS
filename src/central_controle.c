@@ -3,7 +3,7 @@
 
 #include "headers/central_controle.h"
 
-//funcao verificadora de pesos
+//funcao verificadora de pesos e salvar combinacoes
 void selecao_combinacoes_validas(RochaMineral temp[], int tam_combinacao_atual, CombinacaoValida *combinacoes_validas, int *qnt_combinacoes_validas){
     float peso_total = 0;
     int total_valores = 0;
@@ -33,14 +33,6 @@ void selecao_combinacoes_validas(RochaMineral temp[], int tam_combinacao_atual, 
     }
 }
 
-    // for(int i = 0; i<qnt_combinacoes_validas; i++){
-    //     printf("------------------------------------------\n");
-    //     printf("MELHOR VALOR: %d\n", melhor_valor);
-    //     printf("PESO DAS ROCHAS VALIDAS: %f\n", combinacoes_validas[i].peso);
-    //     printf("VALORES DAS ROCHAS VALIDAS: %d\n", combinacoes_validas[i].valor);
-    //     printf("------------------------------------------\n");
-    // }
-
 //função para gerar combinações
 void gerarCombinacoes(RochaMineral array_elementos_combinacao[], 
                       int tam_total_array, 
@@ -51,11 +43,7 @@ void gerarCombinacoes(RochaMineral array_elementos_combinacao[],
                       CombinacaoValida *combinacoes_validas,
                       int *qnt_combinacoes_validas) {
     if (index_combinacao_atual == tam_combinacao_atual) {
-        //quando a combinação estiver completa imprime
-        //TODO: printf("====================\n");
-        //TODO: printf("Combinacao:\n");
         selecao_combinacoes_validas(temp, tam_combinacao_atual, combinacoes_validas, qnt_combinacoes_validas);
-        printf("\n");
         return;
     }
 
@@ -82,7 +70,6 @@ void gerarTodasCombinacoes(RochaMineral array_elementos_combinacao[], int tam_to
 int LerArquivo(char *nome_arquivo, RochaMineral rochas[]) {
     FILE *arquivo = fopen(nome_arquivo, "r");
     if (!arquivo) {
-        //TODO: printf("Erro ao abrir o arquivo\n");
         return 0;
     }
 
