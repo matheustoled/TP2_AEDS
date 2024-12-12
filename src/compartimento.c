@@ -30,13 +30,22 @@ double PesoAtual(Compartimento *LRM){
     return peso;
 }
 
+int InsereCombinacao(Compartimento *LRM, RochaMineral *combinacao, int qtd_rochas) {
+    for (int i = 0; i < qtd_rochas; i++) {
+        if (!InsereRochaM(LRM, &combinacao[i], 40)) {
+            return 0; // Falha ao inserir a combinação
+        }
+    }
+    return 1; // Sucesso
+}
+
 int InsereRochaM(Compartimento *LRM, RochaMineral *rocha_validas, int PesoMax) {
-    double pesoAtual = PesoAtual(LRM); // Calcula o peso atual das rochas no compartimento
-    if (pesoAtual + rocha_validas->peso > PesoMax) {
+    double pesoAtual = PesoAtual(LRM);
+    if (pesoAtual + rocha_validas->peso > LRM->pesoMAX) {
         return 0; // Não pode inserir porque o peso ultrapassa o limite
     }
 
-    // Se não ultrapassar o peso máximo, insere a rocha
+    // Insere a rocha no compartimento
     LRM->pUltimo->pProx = (CelulaC*) malloc(sizeof(CelulaC));
     LRM->pUltimo = LRM->pUltimo->pProx;
     LRM->pUltimo->rocha = *rocha_validas;

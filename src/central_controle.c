@@ -4,25 +4,32 @@
 #include "headers/central_controle.h"
 
 //funcao verificadora de pesos
-void selecao_combinacoes_validas(RochaMineral temp[], int tam_combinacao_atual, RochaMineral *combinacoes_validas, int *qnt_combinacoes_validas){
+void selecao_combinacoes_validas(RochaMineral temp[], int tam_combinacao_atual, CombinacaoValida *combinacoes_validas, int *qnt_combinacoes_validas){
     float peso_total = 0;
     int total_valores = 0;
-    for(int i = 0; i < tam_combinacao_atual; i++){
-        peso_total += temp[i].peso;
-    }
-    for(int j = 0; j< tam_combinacao_atual; j++){
-        total_valores += temp[j].valor;
-    }
-    //TODO: printf("PESO TOTAL: %f\n", peso_total);
 
-    if(peso_total<=40){
-        combinacoes_validas[*qnt_combinacoes_validas].peso = peso_total;
-        combinacoes_validas[*qnt_combinacoes_validas].valor = total_valores;
-        //TODO: printf("PESO ROCHA VALIDA: %f\nVALOR ROCHA VALIDA %d\n", combinacoes_validas[*qnt_combinacoes_validas].peso, combinacoes_validas[*qnt_combinacoes_validas].valor);
-        //TODO: printf("\n");
-        *qnt_combinacoes_validas += 1;
-    } else{
-        //TODO: printf("Combinacao Invalida\n");
+    for (int i = 0; i < tam_combinacao_atual; i++) {
+        peso_total += temp[i].peso;
+        total_valores += temp[i].valor;
+    }
+
+    if (peso_total <= 40) {
+        CombinacaoValida *nova_comb = &combinacoes_validas[*qnt_combinacoes_validas];
+        nova_comb->peso = peso_total;
+        nova_comb->valor = total_valores;
+        nova_comb->qtd_rochas = tam_combinacao_atual;
+
+        for (int i = 0; i < tam_combinacao_atual; i++) {
+            nova_comb->rochas[i] = temp[i];
+        }
+
+        (*qnt_combinacoes_validas)++;
+
+        printf("Nova combinacao valida: Peso=%.2f, Valor=%d, Rochas={", peso_total, total_valores);
+        for (int i = 0; i < tam_combinacao_atual; i++) {
+            printf("(%.2f, %d) ", temp[i].peso, temp[i].valor);
+        }
+        printf("}\n");
     }
 }
 
@@ -41,7 +48,7 @@ void gerarCombinacoes(RochaMineral array_elementos_combinacao[],
                       int index_combinacao_atual, 
                       RochaMineral temp[], 
                       int i, 
-                      RochaMineral *combinacoes_validas,
+                      CombinacaoValida *combinacoes_validas,
                       int *qnt_combinacoes_validas) {
     if (index_combinacao_atual == tam_combinacao_atual) {
         //quando a combinação estiver completa imprime
@@ -64,7 +71,7 @@ void gerarCombinacoes(RochaMineral array_elementos_combinacao[],
 }
 
 //gerar todas as combinações de tamanhos diferentes
-void gerarTodasCombinacoes(RochaMineral array_elementos_combinacao[], int tam_total_array, RochaMineral *combinacoes_validas, int *qnt_combinacoes_validas) {
+void gerarTodasCombinacoes(RochaMineral array_elementos_combinacao[], int tam_total_array, CombinacaoValida *combinacoes_validas, int *qnt_combinacoes_validas) {
     for (int tam_combinacao_atual = 1; tam_combinacao_atual <= tam_total_array; tam_combinacao_atual++) {
         RochaMineral temp[tam_combinacao_atual];
         gerarCombinacoes(array_elementos_combinacao, tam_total_array, tam_combinacao_atual, 0, temp, 0, combinacoes_validas, qnt_combinacoes_validas);
@@ -90,46 +97,71 @@ int LerArquivo(const char *nome_arquivo, RochaMineral rochas[]) {
     return quantidade;
 }
 
-// Função para ordenar as rochas por valor (ordem decrescente)
-int compara_valor(const void *a, const void *b) {
-    RochaMineral *rocha_a = (RochaMineral*)a;
-    RochaMineral *rocha_b = (RochaMineral*)b;
-    
-    // Ordena de forma decrescente com base no valor
-    if (rocha_a->valor < rocha_b->valor) {
-        return 1;
-    } else if (rocha_a->valor > rocha_b->valor) {
-        return -1;
-    }
-    return 0;
-}
+void remover_combinacoes_usadas(CombinacaoValida *combinacoes_validas, int *qnt_combinacoes_validas, RochaMineral *rochas_usadas, int qnt_rochas_usadas) {
+    int i = 0;
+    while (i < *qnt_combinacoes_validas) {
+        int remove_comb = 0;
 
-void distribuicao_rochas(RochaMineral *combinacoes_validas, int qnt_combinacoes_validas) {
-    Compartimento comp_sonda1, comp_sonda2, comp_sonda3;
-    FListaRochaM(&comp_sonda1, 40); // Inicializa compartimento da sonda 1
-    FListaRochaM(&comp_sonda2, 40); // Inicializa compartimento da sonda 2
-    FListaRochaM(&comp_sonda3, 40); // Inicializa compartimento da sonda 3
-
-    // Ordena as rochas por valor (decrescente)
-    qsort(combinacoes_validas, qnt_combinacoes_validas, sizeof(RochaMineral), compara_valor);
-
-    int i;
-    for (i = 0; i < qnt_combinacoes_validas; i++) {
-        // Tente adicionar rochas às sondas, verificando o peso máximo e priorizando o valor
-        if (!InsereRochaM(&comp_sonda1, &combinacoes_validas[i], 40)) {
-            if (!InsereRochaM(&comp_sonda2, &combinacoes_validas[i], 40)) {
-                if (!InsereRochaM(&comp_sonda3, &combinacoes_validas[i], 40)) {
-                    printf("Nao foi possivel inserir a rocha de valor %d e peso %.2f em nenhuma sonda.\n", combinacoes_validas[i].valor, combinacoes_validas[i].peso);
+        for (int j = 0; j < qnt_rochas_usadas; j++) {
+            for (int k = 0; k < combinacoes_validas[i].qtd_rochas; k++) {
+                if (combinacoes_validas[i].rochas[k].peso == rochas_usadas[j].peso && combinacoes_validas[i].rochas[k].valor == rochas_usadas[j].valor) {
+                    remove_comb = 1;
+                    break;
                 }
             }
+            if (remove_comb) break;
+        }
+
+        if (remove_comb) {
+            for (int j = i; j < *qnt_combinacoes_validas - 1; j++) {
+                combinacoes_validas[j] = combinacoes_validas[j + 1];
+            }
+            (*qnt_combinacoes_validas)--;
+        } else {
+            i++;
         }
     }
+}
 
-    // Imprime os resultados para as sondas
-    printf("Conteúdo da Sonda 1:\n");
+void distribuicao_rochas(CombinacaoValida *combinacoes_validas, int qnt_combinacoes_validas) {
+    Compartimento comp_sonda1, comp_sonda2, comp_sonda3;
+    FListaRochaM(&comp_sonda1, 40);
+    FListaRochaM(&comp_sonda2, 40);
+    FListaRochaM(&comp_sonda3, 40);
+
+    Compartimento *sondas[] = {&comp_sonda1, &comp_sonda2, &comp_sonda3};
+
+    RochaMineral rochas_usadas[40];
+    int qnt_rochas_usadas = 0;
+
+    for (int sonda_idx = 0; sonda_idx < 3; sonda_idx++) {
+        int melhor_comb_idx = -1;
+        double melhor_valor = 0;
+
+        for (int i = 0; i < qnt_combinacoes_validas; i++) {
+            if (combinacoes_validas[i].peso <= 40 && combinacoes_validas[i].valor > melhor_valor) {
+                melhor_comb_idx = i;
+                melhor_valor = combinacoes_validas[i].valor;
+            }
+        }
+
+        if (melhor_comb_idx != -1) {
+            CombinacaoValida *melhor_comb = &combinacoes_validas[melhor_comb_idx];
+            for (int r = 0; r < melhor_comb->qtd_rochas; r++) {
+                rochas_usadas[qnt_rochas_usadas++] = melhor_comb->rochas[r];
+            }
+
+            if (!InsereCombinacao(sondas[sonda_idx], combinacoes_validas[melhor_comb_idx].rochas, combinacoes_validas[melhor_comb_idx].qtd_rochas)) {
+                printf("Erro ao inserir na sonda %d.\n", sonda_idx + 1);
+            }
+
+            remover_combinacoes_usadas(combinacoes_validas, &qnt_combinacoes_validas, rochas_usadas, qnt_rochas_usadas);
+        }
+    }
+    printf("sonda1\n");
     ImprimeListaRochaM(&comp_sonda1);
-    printf("Conteúdo da Sonda 2:\n");
+    printf("sonda2\n");
     ImprimeListaRochaM(&comp_sonda2);
-    printf("Conteúdo da Sonda 3:\n");
+    printf("sonda3\n");
     ImprimeListaRochaM(&comp_sonda3);
 }
