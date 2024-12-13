@@ -6,16 +6,19 @@
 #include "headers/central_controle.h"
 
 long long combinacao(int n, int k) {
-    if (k > n - k) k = n - k; // Usa o menor entre k e (n-k) para reduzir o número de operações
+    if (k > n - k) k = n - k;
     long long resultado = 1;
     for (int i = 0; i < k; i++) {
-        resultado = resultado * (n - i) / (i + 1); // Calcula diretamente o coeficiente binomial
+        resultado = resultado * (n - i) / (i + 1);
     }
     return resultado;
 }
 
 int main() {
-    srand( (unsigned)time(NULL) );
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock(); //início da medição
     //vetor para armazenar as rochas
     RochaMineral rochas[100];
     int quantidade_rochas;
@@ -34,19 +37,17 @@ int main() {
     if (combinacoes_validas == NULL) {
         printf("Erro ao alocar memoria para combinacoes validas.\n");
     return 1;
-}
-
-    if (quantidade_rochas == 0) {
-        printf("Nenhuma rocha foi carregada.\n");
-        return 1;
     }
 
     //gera todas as combinações
-    printf("Todas as combinacoes:\n");
     gerarTodasCombinacoes(rochas, quantidade_rochas, combinacoes_validas, &qnt_combinacoes_validas);
-    printf("\n\n\n");
 
     distribuicao_rochas(combinacoes_validas, qnt_combinacoes_validas);
     free(combinacoes_validas);
+
+    end = clock(); //fim da medição
+
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; //tempo em segundos
+    printf("Tempo de execucao: %.3f segundos\n", cpu_time_used);
     return 0;
 }
