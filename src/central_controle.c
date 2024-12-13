@@ -29,7 +29,6 @@ void selecao_combinacoes_validas(RochaMineral temp[], int tam_combinacao_atual, 
         for (int i = 0; i < tam_combinacao_atual; i++) {
             printf("(%.2f, %d) ", temp[i].peso, temp[i].valor);
         }
-        printf("}\n");
     }
 }
 
@@ -55,7 +54,6 @@ void gerarCombinacoes(RochaMineral array_elementos_combinacao[],
         //TODO: printf("====================\n");
         //TODO: printf("Combinacao:\n");
         selecao_combinacoes_validas(temp, tam_combinacao_atual, combinacoes_validas, qnt_combinacoes_validas);
-        printf("\n");
         return;
     }
 
